@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleet BOT - AI Fleet Management</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --blurple:#5865F2;--green:#57F287;--yellow:#FEE75C;--fuchsia:#EB459E;
+            --red:#ED4245;--dark1:#1a1625;--dark2:#2B2D31;--border:rgba(255,255,255,0.1)
+        }
+        body{
+            font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+            background:linear-gradient(135deg,var(--dark1),var(--dark2));
+            color:#fff;min-height:100vh
+        }
+        .glass{background:rgba(0,0,0,0.2);backdrop-filter:blur(20px);border:1px solid var(--border)}
+        .card{background:linear-gradient(135deg,rgba(255,255,255,0.1),rgba(255,255,255,0.05));backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:1.5rem;overflow:hidden}
+        .btn{display:inline-flex;align-items:center;justify-content:center;border-radius:0.75rem;padding:0.5rem 1rem;border:1px solid transparent;cursor:pointer;gap:0.5rem;transition:all 0.2s;text-decoration:none;color:inherit}
+        .btn-primary{background:var(--blurple);color:#fff}
+        .btn-gradient{background:linear-gradient(to right,var(--blurple),var(--fuchsia));color:#fff}
+        .btn-outline{background:transparent;border-color:var(--border)}
+        .btn-glass{background:rgba(255,255,255,0.05);border:1px solid var(--border);backdrop-filter:blur(20px)}
+        .btn-glass:hover{background:rgba(255,255,255,0.1)}
+        .input{width:100%;border-radius:0.75rem;border:1px solid var(--border);background:rgba(255,255,255,0.05);padding:0.75rem 1rem;color:#fff}
+        .input:focus{outline:none;border-color:var(--blurple)}
+        .badge-success{background:rgba(87,242,135,0.2);border:1px solid rgba(87,242,135,0.3);color:var(--green);border-radius:9999px;padding:0.25rem 0.75rem;font-size:0.75rem}
+        .badge-warning{background:rgba(254,231,92,0.2);border:1px solid rgba(254,231,92,0.3);color:var(--yellow);border-radius:9999px;padding:0.25rem 0.75rem;font-size:0.75rem}
+        .container{max-width:1280px;margin:0 auto;padding:0 1rem}
+        .grid{display:grid;gap:1.5rem}
+        .grid-cols-1{grid-template-columns:repeat(1,1fr)}
+        .grid-cols-2{grid-template-columns:repeat(2,1fr)}
+        .grid-cols-4{grid-template-columns:repeat(4,1fr)}
+        .flex{display:flex}
+        .items-center{align-items:center}
+        .justify-between{justify-content:space-between}
+        .gap-2{gap:0.5rem}
+        .gap-4{gap:1rem}
+        .p-4{padding:1rem}
+        .p-6{padding:1.5rem}
+        .p-8{padding:2rem}
+        .px-4{padding-left:1rem;padding-right:1rem}
+        .py-2{padding-top:0.5rem;padding-bottom:0.5rem}
+        .py-4{padding-top:1rem;padding-bottom:1rem}
+        .py-8{padding-top:2rem;padding-bottom:2rem}
+        .py-20{padding-top:5rem;padding-bottom:5rem}
+        .mt-4{margin-top:1rem}
+        .mt-6{margin-top:1.5rem}
+        .mt-8{margin-top:2rem}
+        .mb-4{margin-bottom:1rem}
+        .mb-8{margin-bottom:2rem}
+        .mb-16{margin-bottom:4rem}
+        .text-center{text-align:center}
+        .text-sm{font-size:0.875rem}
+        .text-lg{font-size:1.125rem}
+        .text-xl{font-size:1.25rem}
+        .text-2xl{font-size:1.5rem}
+        .text-3xl{font-size:1.875rem}
+        .text-4xl{font-size:2.25rem}
+        .font-bold{font-weight:700}
+        .text-gray-300{color:rgba(255,255,255,0.7)}
+        .text-gray-400{color:rgba(255,255,255,0.6)}
+        .border{border:1px solid var(--border)}
+        .rounded-xl{border-radius:0.75rem}
+        .rounded-2xl{border-radius:1rem}
+        .rounded-3xl{border-radius:1.5rem}
+        .w-4{width:1rem}.h-4{height:1rem}
+        .w-5{width:1.25rem}.h-5{height:1.25rem}
+        .w-6{width:1.5rem}.h-6{height:1.5rem}
+        .w-8{width:2rem}.h-8{height:2rem}
+        .w-10{width:2.5rem}.h-10{height:2.5rem}
+        .w-12{width:3rem}.h-12{height:3rem}
+        .w-full{width:100%}
+        .fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}
+        .top-0{top:0}.left-0{left:0}.right-0{right:0}.inset-0{top:0;right:0;bottom:0;left:0}
+        .z-50{z-index:50}
+        .hidden{display:none}
+        @media(min-width:768px){
+            .md\:flex{display:flex}.md\:hidden{display:none}
+            .md\:grid-cols-2{grid-template-columns:repeat(2,1fr)}
+            .md\:grid-cols-4{grid-template-columns:repeat(4,1fr)}
+        }
+        @media(min-width:1024px){.lg\:grid-cols-4{grid-template-columns:repeat(4,1fr)}}
+        .animate-pulse{animation:pulse 2s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+        .text-gradient{background:linear-gradient(to right,var(--blurple),var(--fuchsia));-webkit-background-clip:text;background-clip:text;color:transparent}
+        .bg-white\/5{background:rgba(255,255,255,0.05)}
+        .border-white\/10{border-color:rgba(255,255,255,0.1)}
+        .backdrop-blur-xl{backdrop-filter:blur(24px)}
+        .pointer-events-none{pointer-events:none}
+        .hover\:scale-\[1\.02\]:hover{transform:scale(1.02)}
+        .transition-all{transition:all 0.2s}
+        .overflow-hidden{overflow:hidden}
+        .overflow-y-auto{overflow-y:auto}
+        .max-h-\[80vh\]{max-height:80vh}
+    </style>
+</head>
+<body>
+    <header class="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
+        <div class="container">
+            <div class="flex h-16 items-center justify-between">
+                <a href="#" class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-[#5865F2] to-[#EB459E] rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2-7h-4L8 11l-4.16.86a1 1 0 0 0-.84 1V16h3m5 0v4"/>
+                            <path d="M6 12V6a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v6"/>
+                        </svg>
+                    </div>
+                    <div><span class="text-xl font-bold">Fleet BOT</span><span class="text-xs text-gray-400 block">AI Fleet Management</span></div>
+                </a>
+                <nav class="hidden md:flex items-center gap-4">
+                    <a href="#dashboard" class="btn btn-glass">Dashboard</a>
+                    <a href="#download" class="btn btn-outline">Guide</a>
+                    <button onclick="openCommands()" class="btn btn-primary">Commands</button>
+                </nav>
+                <button id="menuBtn" class="md:hidden btn btn-glass p-2" aria-label="Toggle mobile menu" aria-expanded="false">
+                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+            </div>
+            <div id="mobileMenu" class="hidden md:hidden pt-4 pb-6 border-t border-white/10">
+                <a href="#dashboard" class="block px-4 py-3 hover:bg-white/5 rounded-xl">Dashboard</a>
+                <a href="#download" class="block px-4 py-3 hover:bg-white/5 rounded-xl">Guide</a>
+                <button onclick="openCommands()" class="block w-full text-left px-4 py-3 hover:bg-white/5 rounded-xl">Commands</button>
+            </div>
+        </div>
+    </header>
+
+    <section id="dashboard" class="pt-32 pb-20">
+        <div class="container">
+            <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+                <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-[#5865F2]/10 rounded-full blur-3xl animate-pulse"></div>
+                <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#EB459E]/10 rounded-full blur-3xl animate-pulse"></div>
+            </div>
+            <div class="text-center mb-16">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
+                    <svg class="w-4 h-4 text-[#FEE75C]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"/></svg>
+                    <span class="text-sm text-gray-300">AI-Powered Fleet Management</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                    <span class="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Command Your</span><br>
+                    <span class="text-gradient">Entire Fleet</span>
+                </h1>
+                <p class="text-lg text-gray-400 max-w-3xl mx-auto mb-10">Get real-time insights, automated reports, and proactive maintenance through natural language commands.</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <div class="card">
+                    <div class="p-6">
+                        <div id="responseBox" class="hidden mb-6 p-4 rounded-2xl bg-[#57F287]/10 border border-[#57F287]/20">
+                            <div class="flex gap-3"><svg class="w-5 h-5 text-[#57F287]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/></svg><div><p id="responseText" class="text-sm"></p><p class="text-xs text-gray-400 mt-1"><span id="responseType" class="text-[#5865F2]"></span></p></div></div>
+                        </div>
+                        <form id="commandForm" class="space-y-4">
+                            <div class="relative">
+                                <div class="absolute left-4 top-1/2 transform -translate-y-1/2"><div class="w-3 h-3 bg-[#57F287] rounded-full animate-pulse"></div></div>
+                                <input type="text" id="commandInput" placeholder="Try: 'BOT, where is TRUCK-001?'" class="input pl-12 pr-24 py-4 text-lg">
+                                <button type="submit" class="btn btn-primary absolute right-2 top-1/2 transform -translate-y-1/2">Send</button>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                <button type="button" onclick="setCommand('BOT, where is TRUCK-001?')" class="btn btn-glass p-2 text-sm">📍 Location</button>
+                                <button type="button" onclick="setCommand('BOT, show active vehicles')" class="btn btn-glass p-2 text-sm">📊 Status</button>
+                                <button type="button" onclick="setCommand('BOT, generate daily report')" class="btn btn-glass p-2 text-sm">📄 Report</button>
+                                <button type="button" onclick="setCommand('BOT, maintenance due')" class="btn btn-glass p-2 text-sm">🔧 Maintenance</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-center gap-4">
+                    <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10"><div class="w-2 h-2 bg-[#57F287] rounded-full animate-pulse"></div><span class="text-sm">Online</span></div>
+                    <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10"><span class="text-[#57F287] font-bold">3</span><span class="text-sm">active</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-12">
+        <div class="container">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="card hover:scale-[1.02] transition-all">
+                    <div class="p-4">
+                        <div class="flex items-center gap-2 mb-3"><div class="p-2 rounded-xl bg-[#57F287]/20"><svg class="w-5 h-5 text-[#57F287]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><h3 class="font-bold">Active Vehicles</h3></div>
+                        <div class="space-y-3">
+                            <div class="p-3 rounded-xl bg-white/5"><div class="flex justify-between"><span class="font-semibold">TRUCK-001</span><span class="text-sm">I-90</span></div><div class="text-xs text-gray-400">John Smith • 62 mph</div></div>
+                            <div class="p-3 rounded-xl bg-white/5"><div class="flex justify-between"><span class="font-semibold">VAN-456</span><span class="text-sm">Detroit</span></div><div class="text-xs text-gray-400">Maria Garcia • 35 mph</div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card hover:scale-[1.02] transition-all">
+                    <div class="p-4">
+                        <div class="flex items-center gap-2 mb-3"><div class="p-2 rounded-xl bg-[#5865F2]/20"><svg class="w-5 h-5 text-[#5865F2]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div><h3 class="font-bold">Location</h3></div>
+                        <input type="text" placeholder="Vehicle ID" class="input text-sm mb-3">
+                        <div class="h-24 rounded-xl bg-gradient-to-br from-[#2f3136] to-black flex items-center justify-center"><span class="text-sm text-gray-400">Live GPS map</span></div>
+                    </div>
+                </div>
+                <div class="card hover:scale-[1.02] transition-all">
+                    <div class="p-4">
+                        <div class="flex items-center gap-2 mb-3"><div class="p-2 rounded-xl bg-[#EB459E]/20"><svg class="w-5 h-5 text-[#EB459E]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/></svg></div><h3 class="font-bold">Daily Report</h3></div>
+                        <div class="grid grid-cols-2 gap-2 mb-3"><div class="p-3 rounded-xl bg-white/5 text-center"><div class="text-xl font-bold text-[#57F287]">1,247</div><div class="text-xs">miles</div></div><div class="p-3 rounded-xl bg-white/5 text-center"><div class="text-xl font-bold text-[#57F287]">187</div><div class="text-xs">fuel</div></div></div>
+                        <button id="reportBtn" class="btn btn-gradient w-full py-2 text-sm">Generate Report</button>
+                    </div>
+                </div>
+                <div class="card hover:scale-[1.02] transition-all">
+                    <div class="p-4">
+                        <div class="flex items-center justify-between mb-3"><div class="flex items-center gap-2"><div class="p-2 rounded-xl bg-[#FEE75C]/20"><svg class="w-5 h-5 text-[#FEE75C]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div><h3 class="font-bold">Maintenance</h3></div><span class="badge-warning text-xs">4</span></div>
+                        <div class="space-y-2"><div class="p-2 rounded-xl bg-white/5 flex justify-between"><span>TRUCK-001</span><span class="text-xs text-[#FEE75C]">Tomorrow</span></div><div class="p-2 rounded-xl bg-white/5 flex justify-between"><span>VAN-456</span><span class="text-xs text-[#57F287]">3 days</span></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="download" class="py-12">
+        <div class="container max-w-2xl">
+            <div class="card text-center p-8">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#5865F2]/20 to-[#EB459E]/20 flex items-center justify-center">
+                    <svg class="w-8 h-8 text-[#5865F2]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/></svg>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">Quick Start Guide</h2>
+                <p class="text-gray-400 mb-4">Get started in minutes</p>
+                <button id="guideBtn" class="btn btn-gradient px-6 py-3">Download Guide</button>
+                <div id="downloadSuccess" class="hidden mt-3 p-2 rounded-xl bg-[#57F287]/10 text-[#57F287] text-sm">✓ Downloaded</div>
+            </div>
+        </div>
+    </section>
+
+    <div id="commandModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+        <div class="relative min-h-screen flex items-center justify-center p-4">
+            <div class="glass rounded-3xl max-w-lg w-full max-h-[80vh] overflow-hidden">
+                <div class="p-4 border-b border-white/10 flex justify-between items-center">
+                    <h3 class="font-bold">Commands</h3>
+                    <button onclick="closeCommands()" class="p-2 hover:bg-white/5 rounded-xl" aria-label="Close commands modal">✕</button>
+                </div>
+                <div class="p-4 border-b border-white/10"><input type="text" id="searchCmd" placeholder="Search..." class="input text-sm" onkeyup="filterCommands()"></div>
+                <div id="cmdList" class="p-4 overflow-y-auto max-h-[60vh]">
+                    <div class="cmd-item"><div class="font-bold text-[#5865F2] text-sm mb-2">📍 Location</div><div class="pl-2 mb-4"><div class="text-sm mb-1"><code class="bg-black/20 px-2 py-1 rounded">BOT, where is TRUCK-001</code> - Get location</div></div></div>
+                    <div class="cmd-item"><div class="font-bold text-[#57F287] text-sm mb-2">📊 Status</div><div class="pl-2 mb-4"><div class="text-sm mb-1"><code class="bg-black/20 px-2 py-1 rounded">BOT, show active vehicles</code> - List active</div></div></div>
+                    <div class="cmd-item"><div class="font-bold text-[#EB459E] text-sm mb-2">📄 Reports</div><div class="pl-2 mb-4"><div class="text-sm mb-1"><code class="bg-black/20 px-2 py-1 rounded">BOT, generate daily report</code> - Create report</div></div></div>
+                    <div class="cmd-item"><div class="font-bold text-[#FEE75C] text-sm mb-2">🔧 Maintenance</div><div class="pl-2"><div class="text-sm mb-1"><code class="bg-black/20 px-2 py-1 rounded">BOT, maintenance due</code> - Check due</div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="border-t border-white/10 py-6 mt-8"><div class="container text-center text-sm text-gray-500">© 2024 Fleet BOT</div></footer>
+
+    <script>
+        // Mobile menu
+        document.getElementById('menuBtn').addEventListener('click',()=>{
+            const btn=document.getElementById('menuBtn')
+            const menu=document.getElementById('mobileMenu')
+            menu.classList.toggle('hidden')
+            btn.setAttribute('aria-expanded',!menu.classList.contains('hidden'))
+        })
+
+        // Command responses
+        const responses={
+            'where is':'TRUCK-001 at I-90, Chicago. Speed:62 mph, Fuel:78%',
+            'show active':'3 active: TRUCK-001, VAN-456, VAN-202',
+            'generate daily':'Report: 1,247 miles, 187 gal fuel',
+            'maintenance due':'4 tasks pending: 1 urgent, 2 medium, 1 low'
+        }
+
+        // Form submit
+        document.getElementById('commandForm').addEventListener('submit',(e)=>{
+            e.preventDefault()
+            const cmd=document.getElementById('commandInput').value.toLowerCase()
+            const box=document.getElementById('responseBox')
+            const text=document.getElementById('responseText')
+            const type=document.getElementById('responseType')
+            let res="Command not recognized. Try quick commands.",key="unknown"
+            for(const[k,v]of Object.entries(responses))if(cmd.includes(k)){res=v;key=k;break}
+            text.textContent=res;type.textContent=key;box.classList.remove('hidden')
+        })
+
+        // Set quick command
+        function setCommand(cmd){
+            document.getElementById('commandInput').value=cmd
+            document.getElementById('commandForm').dispatchEvent(new Event('submit'))
+        }
+
+        // Generate report
+        document.getElementById('reportBtn').addEventListener('click',function(){
+            const btn=this;btn.disabled=true;btn.setAttribute('aria-busy','true');btn.setAttribute('aria-label','Generating report');btn.innerHTML='<span class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></span>...'
+            setTimeout(()=>{
+                btn.disabled=false;btn.removeAttribute('aria-busy');btn.removeAttribute('aria-label');btn.innerHTML='Generate Report'
+                const blob=new Blob([`Fleet Report\nDate: ${new Date().toLocaleDateString()}\nMiles:1,247\nFuel:187 gal`],{type:'text/plain'})
+                const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='fleet-report.txt';a.click()
+            },1000)
+        })
+
+        // Download guide
+        document.getElementById('guideBtn').addEventListener('click',function(){
+            const btn=this;btn.disabled=true;btn.setAttribute('aria-busy','true');btn.setAttribute('aria-label','Downloading guide');btn.innerHTML='<span class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></span>...'
+            setTimeout(()=>{
+                btn.disabled=false;btn.removeAttribute('aria-busy');btn.removeAttribute('aria-label');btn.innerHTML='Download Guide'
+                const blob=new Blob([`FLEET BOT GUIDE\n\nCommands:\n- BOT, where is TRUCK-001\n- BOT, show active vehicles\n- BOT, generate daily report\n- BOT, maintenance due`],{type:'text/plain'})
+                const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='fleetbot-guide.txt';a.click()
+                document.getElementById('downloadSuccess').classList.remove('hidden')
+                setTimeout(()=>document.getElementById('downloadSuccess').classList.add('hidden'),2000)
+            },1000)
+        })
+
+        // Commands modal
+        function openCommands(){document.getElementById('commandModal').classList.remove('hidden')}
+        function closeCommands(){document.getElementById('commandModal').classList.add('hidden')}
+        document.getElementById('commandModal').addEventListener('click',(e)=>{if(e.target===document.getElementById('commandModal'))closeCommands()})
+
+        // Filter commands
+        function filterCommands(){
+            const search=document.getElementById('searchCmd').value.toLowerCase()
+            document.querySelectorAll('.cmd-item').forEach(item=>{
+                item.style.display=item.textContent.toLowerCase().includes(search)?'block':'none'
+            })
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(a=>{
+            a.addEventListener('click',(e)=>{
+                e.preventDefault()
+                const id=a.getAttribute('href')
+                if(id&&id!=='#')document.querySelector(id)?.scrollIntoView({behavior:'smooth'})
+            })
+        })
+
+        // Close mobile menu on click
+        document.querySelectorAll('#mobileMenu a').forEach(a=>{
+            a.addEventListener('click',()=>document.getElementById('mobileMenu').classList.add('hidden'))
+        })
+    </script>
+</body>
+</html>
