@@ -1,0 +1,18 @@
+{
+  "name": "CJM Fleet BOT",
+  "short_name": "Fleet BOT",
+  "description": "Fleet management dashboard with FMCSA-oriented workflows.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1a1625",
+  "theme_color": "#1a1625",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

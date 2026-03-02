@@ -1,0 +1,47 @@
+{
+  "name": "cjm-fleet-bot",
+  "version": "1.0.0",
+  "description": "Fleet BOT is a lightweight AI-style fleet management system interface for tracking vehicles, checking status, generating daily reports, monitoring maintenance, and supporting FMCSA-oriented compliance workflows from a single dashboard.",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "lint": "prettier --check \"index.html\" \"README.md\" \"package.json\" \"capacitor.config.json\" \"playwright.config.mjs\" \".github/workflows/*.yml\" \"src/**/*.js\" \"tests/**/*.js\" \"e2e/**/*.js\" \"public/**/*.{js,webmanifest}\"",
+    "format": "prettier --write \"index.html\" \"README.md\" \"package.json\" \"capacitor.config.json\" \"playwright.config.mjs\" \".github/workflows/*.yml\" \"src/**/*.js\" \"tests/**/*.js\" \"e2e/**/*.js\" \"public/**/*.{js,webmanifest}\"",
+    "cap:sync": "npx cap sync",
+    "cap:add:android": "npx cap add android",
+    "cap:add:ios": "npx cap add ios",
+    "cap:open:android": "npx cap open android",
+    "cap:open:ios": "npx cap open ios",
+    "mobile:android": "npm run build && npx cap sync android",
+    "mobile:ios": "npm run build && npx cap sync ios",
+    "test:unit": "vitest run tests",
+    "test:watch": "vitest tests",
+    "pretest:e2e": "playwright install chromium",
+    "test:e2e": "npm run build && playwright test",
+    "test:e2e:headed": "npm run build && playwright test --headed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juliusjay9-lang/CJM-Fleet-BOT.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/juliusjay9-lang/CJM-Fleet-BOT/issues"
+  },
+  "homepage": "https://github.com/juliusjay9-lang/CJM-Fleet-BOT#readme",
+  "dependencies": {
+    "@capacitor/android": "^8.1.0",
+    "@capacitor/core": "^8.1.0",
+    "@capacitor/ios": "^8.1.0",
+    "vite": "^7.3.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.1.0",
+    "@playwright/test": "^1.58.2",
+    "prettier": "^3.8.1",
+    "vitest": "^4.0.18"
+  }
+}
